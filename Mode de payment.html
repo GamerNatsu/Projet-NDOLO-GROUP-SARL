@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement par Mobile Money et Orange Money</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .payment-amount {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: #999;
+        }
+        
+        .payment-method.active {
+            border-color: #0066cc;
+            background-color: #f0f7ff;
+        }
+        
+        .payment-method.orange-money.active {
+            border-color: #FF7900;
+            background-color: #fff8f0;
+        }
+        
+        .payment-method img {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .payment-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            border-color: #0066cc;
+            outline: none;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group input {
+            flex: 1;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .orange-money-btn {
+            background-color: #FF7900;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        .payment-instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #0066cc;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .orange-money-instructions {
+            border-left: 4px solid #FF7900;
+        }
+        
+        .payment-status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #e6ffe6;
+            border: 1px solid #2db300;
+            color: #2db300;
+        }
+        
+        .error {
+            background-color: #ffe6e6;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+        }
+        
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0066cc;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Paiement Sécurisé</h1>
+        
+        <div class="payment-amount" id="amount">
+            5000 FCFA
+        </div>
+        
+        <div class="payment-methods">
+            <div class="payment-method mobile-money active" onclick="selectPaymentMethod('mobile-money')">
+                <img src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0zMiA2YTE0IDE0IDAgMCAwIC0xNCAxNHYzaC00djIyaDM2di0yMmgtNHYtM2ExNCAxNCAwIDAgMCAtMTQtMTR6bTAgMmExMiAxMiAwIDAgMSAxMiAxMnYzaC0yNHYtM2ExMiAxMiAwIDAgMSAxMi0xMnptLTE2IDE5aDMydjE4aC0zMnoiIGZpbGw9IiMwMDY2Y2MiLz48cGF0aCBkPSJtMzIgMzJhMyAzIDAgMSAwIDMgMyAzLjAwOSAzLjAwOSAwIDAgMCAtMy0zem0wIDRhMSAxIDAgMSAxIDEtMSAxLjAwNiAxLjAwNiAwIDAgMSAtMSAxeiIgZmlsbD0iIzAwNjZjYyIvPjxwYXRoIGQ9Im0zMiAzOWExIDEgMCAwIDAgLTEgMXY0YTEgMSAwIDAgMCAyIDB2LTRhMSAxIDAgMCAwIC0xLTF6IiBmaWxsPSIjMDA2NmNjIi8+PC9zdmc+" alt="Mobile Money">
+                <span>Mobile Money</span>
+            </div>
+            
+            <div class="payment-method orange-money" onclick="selectPaymentMethod('orange-money')">
+                <img src="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDY0IDY0IiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0zMiA2YTE0IDE0IDAgMCAwIC0xNCAxNHYzaC00djIyaDM2di0yMmgtNHYtM2ExNCAxNCAwIDAgMCAtMTQtMTR6bTAgMmExMiAxMiAwIDAgMSAxMiAxMnYzaC0yNHYtM2ExMiAxMiAwIDAgMSAxMi0xMnptLTE2IDE5aDMydjE4aC0zMnoiIGZpbGw9IiNGRjc5MDAiLz48cGF0aCBkPSJtMzIgMzJhMyAzIDAgMSAwIDMgMyAzLjAwOSAzLjAwOSAwIDAgMCAtMy0zem0wIDRhMSAxIDAgMSAxIDEtMSAxLjAwNiAxLjAwNiAwIDAgMSAtMSAxeiIgZmlsbD0iI0ZGNzkwMCIvPjxwYXRoIGQ9Im0zMiAzOWExIDEgMCAwIDAgLTEgMXY0YTEgMSAwIDAgMCAyIDB2LTRhMSAxIDAgMCAwIC0xLTF6IiBmaWxsPSIjRkY3OTAwIi8+PC9zdmc+" alt="Orange Money">
+                <span>Orange Money</span>
+            </div>
+        </div>
+        
+        <div id="mobile-money-form" class="payment-form">
+            <div class="form-group">
+                <label for="mobile-number">Numéro Mobile Money</label>
+                <input type="tel" id="mobile-number" placeholder="Ex: 05xxxxxxxx">
+            </div>
+            
+            <button onclick="processPayment('mobile-money')" id="mobile-money-btn">Payer par Mobile Money</button>
+            
+            <div class="payment-instructions">
+                <p><strong>Instructions:</strong></p>
+                <p>1. Entrez votre numéro de téléphone</p>
+                <p>2. Cliquez sur "Payer par Mobile Money"</p>
+                <p>3. Vous recevrez un message pour confirmer le paiement</p>
+                <p>4. Entrez votre code PIN Mobile Money pour valider</p>
+                <p><strong>Marchand:</strong> MARCHANT1234</p>
+            </div>
+        </div>
+        
+        <div id="orange-money-form" class="payment-form" style="display: none;">
+            <div class="form-group">
+                <label for="orange-number">Numéro Orange Money</label>
+                <input type="tel" id="orange-number" placeholder="Ex: 07xxxxxxxx">
+            </div>
+            
+            <button onclick="processPayment('orange-money')" id="orange-money-btn" class="orange-money-btn">Payer par Orange Money</button>
+            
+            <div class="payment-instructions orange-money-instructions">
+                <p><strong>Instructions:</strong></p>
+                <p>1. Entrez votre numéro Orange</p>
+                <p>2. Cliquez sur "Payer par Orange Money"</p>
+                <p>3. Vous recevrez un message pour confirmer le paiement</p>
+                <p>4. Entrez votre code secret Orange Money pour valider</p>
+                <p><strong>Marchand:</strong> ORANGEM5678</p>
+            </div>
+        </div>
+        
+        <div class="loader" id="payment-loader"></div>
+        
+        <div class="payment-status" id="payment-status"></div>
+    </div>
+    
+    <script>
+        // Sélection de la méthode de paiement
+        function selectPaymentMethod(method) {
+            // Réinitialiser les classes actives
+            document.querySelector('.payment-method.mobile-money').classList.remove('active');
+            document.querySelector('.payment-method.orange-money').classList.remove('active');
+            
+            // Ajouter la classe active à la méthode sélectionnée
+            document.querySelector('.payment-method.' + method).classList.add('active');
+            
+            // Afficher le formulaire correspondant
+            if (method === 'mobile-money') {
+                document.getElementById('mobile-money-form').style.display = 'block';
+                document.getElementById('orange-money-form').style.display = 'none';
+            } else {
+                document.getElementById('mobile-money-form').style.display = 'none';
+                document.getElementById('orange-money-form').style.display = 'block';
+            }
+            
+            // Réinitialiser le statut
+            document.getElementById('payment-status').style.display = 'none';
+        }
+        
+        // Traitement du paiement
+        function processPayment(method) {
+            // Récupérer le numéro de téléphone
+            let phoneNumber = '';
+            let merchantCode = '';
+            
+            if (method === 'mobile-money') {
+                phoneNumber = document.getElementById('mobile-number').value;
+                merchantCode = 'MARCHANT1234';
+            } else {
+                phoneNumber = document.getElementById('orange-number').value;
+                merchantCode = 'ORANGEM5678';
+            }
+            
+            // Vérifier si le numéro est valide (exemple simple)
+            if (!phoneNumber || phoneNumber.length < 8) {
+                showStatus('Veuillez entrer un numéro de téléphone valide.', 'error');
+                return;
+            }
+            
+            // Désactiver les boutons pendant le traitement
+            document.getElementById('mobile-money-btn').disabled = true;
+            document.getElementById('orange-money-btn').disabled = true;
+            
+            // Afficher le loader
+            document.getElementById('payment-loader').style.display = 'block';
+            
+            // Simuler une requête de paiement (dans un vrai cas, ceci serait une requête API)
+            setTimeout(function() {
+                // Cacher le loader
+                document.getElementById('payment-loader').style.display = 'none';
+                
+                // Dans un vrai système, vous vérifieriez la réponse de l'API
+                // Pour cette démo, nous simulons un paiement réussi
+                const amount = document.getElementById('amount').innerText;
+                
+                showStatus(`Paiement de ${amount} effectué avec succès par ${method === 'mobile-money' ? 'Mobile Money' : 'Orange Money'}.<br>Un SMS de confirmation a été envoyé à ${phoneNumber}.<br>Référence marchand: ${merchantCode}`, 'success');
+                
+                // Réactiver les boutons
+                document.getElementById('mobile-money-btn').disabled = false;
+                document.getElementById('orange-money-btn').disabled = false;
+            }, 2000);
+        }
+        
+        // Afficher le statut du paiement
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('payment-status');
+            statusElement.innerHTML = message;
+            statusElement.className = 'payment-status ' + type;
+            statusElement.style.display = 'block';
+        }
+        
+        // Pour définir un montant différent (exemple)
+        function setAmount(amount) {
+            document.getElementById('amount').innerText = amount + ' FCFA';
+        }
+    </script>
+</body>
+</html>

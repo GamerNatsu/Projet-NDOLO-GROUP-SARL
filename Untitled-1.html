@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Témoignages</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">Ce que disent nos clients</h2>
+        <div class="testimonials">
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p>⭐️⭐️⭐️⭐️⭐️</p>
+                    <p>“Service exceptionnel ! L'équipe est à l'écoute et très professionnelle.”</p>
+                </div>
+                <div class="testimonial-footer">
+                    <img src="https://via.placeholder.com/80" alt="Alice Dupont">
+                    <h3>Alice Dupont</h3>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p>⭐️⭐️⭐️⭐️⭐️</p>
+                    <p>“Un travail de qualité avec un rendu magnifique. Très satisfait du service.”</p>
+                </div>
+                <div class="testimonial-footer">
+                    <img src="https://via.placeholder.com/80" alt="Marc Lefevre">
+                    <h3>Marc Lefevre</h3>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-content">
+                    <p>⭐️⭐️⭐️⭐️⭐️</p>
+                    <p>“J’ai été impressionnée par le professionnalisme et la rapidité d’exécution.”</p>
+                </div>
+                <div class="testimonial-footer">
+                    <img src="https://via.placeholder.com/80" alt="Sophie Martin">
+                    <h3>Sophie Martin</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        .title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .testimonials {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .testimonial {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        .testimonial:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .testimonial-content {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .testimonial-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .testimonial-footer img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .testimonial-footer h3 {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('.testimonial').hide().each(function(index) {
+                $(this).delay(300 * index).fadeIn(1000).css("transform", "scale(1)");
+            });
+        });
+    </script>
+</body>
+</html>
+
